@@ -1,7 +1,6 @@
 package com.project.test.cantina.controller;
 
 import com.project.test.cantina.dto.*;
-import com.project.test.cantina.entities.Order;
 import com.project.test.cantina.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -48,11 +47,10 @@ public class UserController {
     }
 
     @GetMapping("/{userId}/order")
-    public Page<UserOrderDTO> getUserOrder
+    public Page<OrderForUserDTO> getUserOrder
             (@PathVariable Long userId,
              @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable){
-
-        Page<UserOrderDTO> userOrders = userService.getUserOrders(userId, pageable);
+        Page<OrderForUserDTO> userOrders = userService.getUserOrders(userId, pageable);
             return userOrders;
     }
 

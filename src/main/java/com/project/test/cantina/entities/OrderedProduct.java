@@ -25,8 +25,9 @@ public class OrderedProduct {
     @ManyToOne
     private Product product;
 
-    public OrderedProduct(String name ,BigDecimal unityPrice, Order order, Product product){
+    public OrderedProduct(String name, int orderedQuantity, BigDecimal unityPrice, Order order, Product product){
         this.name = name;
+        this.orderedQuantity = orderedQuantity;
         this.unityPrice = unityPrice;
         this.order = order;
         this.product = product;

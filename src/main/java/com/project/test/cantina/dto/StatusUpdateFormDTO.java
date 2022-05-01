@@ -1,5 +1,6 @@
 package com.project.test.cantina.dto;
 
+import com.project.test.cantina.constants.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,9 +8,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class UserOrderDTO {
+public class StatusUpdateFormDTO {
 
-    private Long id;
-    private String name;
+    private Status status;
 
 }

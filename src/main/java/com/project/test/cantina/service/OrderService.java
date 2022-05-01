@@ -1,8 +1,10 @@
 package com.project.test.cantina.service;
 
+import com.project.test.cantina.constants.Status;
 import com.project.test.cantina.dto.OrderDTO;
 import com.project.test.cantina.dto.OrderFormDTO;
 import com.project.test.cantina.dto.OrderedProductDTO;
+import com.project.test.cantina.dto.StatusUpdateFormDTO;
 import com.project.test.cantina.entities.Order;
 import com.project.test.cantina.entities.OrderedProduct;
 import com.project.test.cantina.entities.Product;
@@ -70,6 +72,28 @@ public class OrderService {
                     orderedProducts.stream().map(o ->
                             modelMapper.map(o, OrderedProductDTO.class)).collect(Collectors.toList());
             return new PageImpl<>(orderedProductDTOList, pageable, orderedProductDTOList.size());
+        }
+        return null;
+    }
+
+    public OrderDTO putOrderStatus(Long orderId, StatusUpdateFormDTO statusUpdateFormDTO) {
+
+        Optional<Order> optionalOrder = orderRepository.findById(orderId);
+
+        if (optionalOrder.isPresent()){
+            Order order = optionalOrder.get();
+            order.setStatus(statusUpdateFormDTO.getStatus());
+            orderRepository.save(order);
+
+            if (order.getStatus().equals(Status.NOT_WITHDRAWN)){
+                List<OrderedProduct> orderedProducts = orderedProductRepository.findByOrderId(orderId);
+                for (int i = 0; i < orderedProducts.size(); i++) {
+                    Product product = orderedProducts.get(i).getProduct();
+                    product.setQuantity(product.getQuantity() + 1);
+                    productRepository.save(product);
+                }
+            return modelMapper.map(order, OrderDTO.class);
+            }
         }
         return null;
     }

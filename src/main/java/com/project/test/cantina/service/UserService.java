@@ -1,5 +1,6 @@
 package com.project.test.cantina.service;
 
+import com.project.test.cantina.constants.Status;
 import com.project.test.cantina.dto.*;
 import com.project.test.cantina.entities.Order;
 import com.project.test.cantina.entities.OrderedProduct;
@@ -46,14 +47,14 @@ public class UserService {
         return new PageImpl<>(userDTOList, pageable, userDTOList.size());
     }
 
-    public Page<UserOrderDTO> getUserOrders(Long userId, Pageable pageable) {
+    public Page<OrderForUserDTO> getUserOrders(Long userId, Pageable pageable) {
 
         Optional<User> optionalUser = userRepository.findById(userId);
 
         if (optionalUser.isPresent()){
             Page<Order> orders = orderRepository.findByUserId(userId, pageable);
-            List<UserOrderDTO> userOrderDTOList =
-                    orders.stream().map(u -> modelMapper.map(u, UserOrderDTO.class)).collect(Collectors.toList());
+            List<OrderForUserDTO> userOrderDTOList =
+                    orders.stream().map(u -> modelMapper.map(u, OrderForUserDTO.class)).collect(Collectors.toList());
             return new PageImpl<>(userOrderDTOList, pageable, userOrderDTOList.size());
         }
         return null;
@@ -74,13 +75,17 @@ public class UserService {
             OrderedProduct orderedProduct = null;
             int minusQuantity = 0;
 
+            if(order.getStatus().equals(Status.WITHDRAWN) || order.getStatus().equals(Status.NOT_WITHDRAWN)){
+                return null;
+            }
+
             if(product.getQuantity() < orderedProductFormDTO.getOrderedQuantity()){
-                throw new RuntimeException("Quantidade de produtos insuficiente!");
+                return null;
             }
 
             for (int i = 0; i < orderedProductFormDTO.getOrderedQuantity(); i++) {
                         orderedProduct =
-                        new OrderedProduct(product.getName(),
+                        new OrderedProduct(product.getName(), 1,
                                 product.getUnityPrice(), order, product);
                         order.setTotalPrice(order.getTotalPrice().add(product.getUnityPrice()));
                         orderRepository.save(order);

@@ -3,6 +3,7 @@ package com.project.test.cantina.controller;
 import com.project.test.cantina.dto.OrderDTO;
 import com.project.test.cantina.dto.OrderFormDTO;
 import com.project.test.cantina.dto.OrderedProductDTO;
+import com.project.test.cantina.dto.StatusUpdateFormDTO;
 import com.project.test.cantina.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -44,4 +45,14 @@ public class OrderController {
         return orderedProducts;
     }
 
+    @PutMapping("/{orderId}")
+    public ResponseEntity<OrderDTO> putOrderStatus
+            (@PathVariable Long orderId, @RequestBody StatusUpdateFormDTO statusUpdateFormDTO){
+
+        OrderDTO order = orderService.putOrderStatus(orderId ,statusUpdateFormDTO);
+        if (order != null){
+            return ResponseEntity.ok().body(order);
+        }
+        return ResponseEntity.noContent().build();
+    }
 }
