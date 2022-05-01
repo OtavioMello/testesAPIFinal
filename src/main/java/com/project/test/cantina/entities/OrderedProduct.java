@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.List;
 
 @Entity(name = "ordered_product")
 @AllArgsConstructor
@@ -16,12 +15,22 @@ public class OrderedProduct {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long id;
+    private String name;
     private int orderedQuantity;
-    private BigDecimal price;
-    private BigDecimal totalPrice;
+    private BigDecimal unityPrice;
     @ManyToOne
     private Order order;
     @ManyToOne
     private Product product;
+
+    public OrderedProduct(String name ,BigDecimal unityPrice, Order order, Product product){
+        this.name = name;
+        this.unityPrice = unityPrice;
+        this.order = order;
+        this.product = product;
+    }
+
 }
+

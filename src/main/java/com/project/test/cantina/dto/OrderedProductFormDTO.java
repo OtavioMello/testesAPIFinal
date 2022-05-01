@@ -7,10 +7,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class UserDTO {
+public class OrderedProductFormDTO {
 
-    private Long id;
-    private String name;
-    private String email;
+    private int orderedQuantity;
+    private Long productId;
 
 }
